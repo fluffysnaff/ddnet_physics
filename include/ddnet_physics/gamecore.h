@@ -337,6 +337,7 @@ typedef enum {
   PARTICLE_TYPE_HAMMER_HIT,
   PARTICLE_TYPE_EXPLOSION,
   PARTICLE_TYPE_AIR_JUMP,
+  PARTICLE_TYPE_CONFETTI,
 } EParticleType;
 
 typedef struct WorldCore {

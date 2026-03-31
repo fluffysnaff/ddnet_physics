@@ -21,6 +21,8 @@ static void cc_handle_tile_start(SCharacterCore *pCore) {
 static void cc_handle_tile_finish(SCharacterCore *pCore) {
   if (pCore->m_StartTick != -1 && pCore->m_FinishTick == -1) {
     pCore->m_FinishTick = pCore->m_pWorld->m_GameTick;
+    if (pCore->m_pWorld->particle)
+      pCore->m_pWorld->particle(pCore->m_Pos, PARTICLE_TYPE_CONFETTI, pCore->m_Id, pCore->m_pWorld->user_data);
   }
 }
 
