@@ -2534,6 +2534,13 @@ void wc_create_explosion(SWorldCore *pWorld, mvec2 Pos, int Owner) {
   if (pWorld->particle)
     pWorld->particle(Pos, PARTICLE_TYPE_EXPLOSION, -1, pWorld->user_data);
 
+  bool Hit = Owner < 0 || !pWorld->m_pCharacters[Owner].m_GrenadeHitDisabled;
+  float Strength;
+  if (Owner != -1)
+    Strength = pWorld->m_pCharacters[Owner].m_pTuning->m_ExplosionStrength;
+  else
+    Strength = pWorld->m_pTunings[0].m_ExplosionStrength;
+
   for (int i = 0; i < pWorld->m_NumCharacters; i++) {
     SCharacterCore *pChr = &pWorld->m_pCharacters[i];
     mvec2 Diff = vvsub(pChr->m_Pos, Pos);
@@ -2544,18 +2551,13 @@ void wc_create_explosion(SWorldCore *pWorld, mvec2 Pos, int Owner) {
     if (l)
       ForceDir = vnormalize_nomask(Diff);
     l = 1 - fclamp((l - EXPLOSION_INNER_RADIUS) / (EXPLOSION_RADIUS - EXPLOSION_INNER_RADIUS), 0.0f, 1.0f);
-    float Strength;
-    if (Owner != -1)
-      Strength = pWorld->m_pCharacters[Owner].m_pTuning->m_ExplosionStrength;
-    else
-      Strength = pWorld->m_pTunings[0].m_ExplosionStrength;
 
     float Dmg = Strength * l;
     if (!(int)Dmg)
       continue;
 
     pChr->m_HitNum += Dmg;
-    if (!pWorld->m_pCharacters[Owner].m_GrenadeHitDisabled || Owner == pChr->m_Id) {
+    if (Hit || Owner == pChr->m_Id) {
       if (pChr->m_Solo && Owner != pChr->m_Id)
         continue;
       cc_take_damage(pChr, vfmul(ForceDir, Dmg * 2));

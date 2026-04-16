@@ -1585,7 +1585,7 @@ int get_index(SCollision *pCollision, mvec2 PrevPos, mvec2 Pos) {
 }
 
 int entity(SCollision *pCollision, int x, int y, int Layer) {
-  if ((unsigned char)x >= pCollision->m_MapData.width || (unsigned char)y >= pCollision->m_MapData.height)
+  if ((unsigned int)x >= pCollision->m_MapData.width || (unsigned int)y >= pCollision->m_MapData.height)
     return 0;
 
   const int Index = pCollision->m_pWidthLookup[y] + x;
